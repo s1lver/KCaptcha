@@ -1,15 +1,13 @@
 <?php
 # KCAPTCHA configuration file
 
-$alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"; # do not change without changing font files!
-
 # symbols used to draw CAPTCHA
 //$allowed_symbols = "0123456789"; #digits
 //$allowed_symbols = "23456789abcdegkmnpqsuvxyz"; #alphabet without similar symbols (o=0, 1=l, i=j, t=f)
 $allowed_symbols = "23456789abcdegikpqsvxyz"; #alphabet without similar symbols (o=0, 1=l, i=j, t=f)
 
 # folder with fonts
-$fontsdir = 'fonts';	
+$fontsdir = 'fonts';
 
 # CAPTCHA string length
 $length = mt_rand(5,7); # random 5 or 6 or 7

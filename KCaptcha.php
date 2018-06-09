@@ -18,6 +18,12 @@
 class KCaptcha
 {
 	/**
+	 * Do not change without changing font files!
+	 * @var string
+	 */
+	private $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
+
+	/**
 	 * Generates keystring and image
 	 * KCaptcha constructor.
 	 */
@@ -35,7 +41,7 @@ class KCaptcha
 		    closedir($handle);
 		}	
 	
-		$alphabet_length = strlen($alphabet);
+		$alphabet_length = strlen($this->alphabet);
 		
 		do {
 			// generating random keystring
@@ -63,13 +69,13 @@ class KCaptcha
 				$transparent = (imagecolorat($font, $i, 0) >> 24) == 127;
 
 				if (!$reading_symbol && !$transparent) {
-					$font_metrics[$alphabet{$symbol}] = array('start'=>$i);
+					$font_metrics[$this->alphabet{$symbol}] = array('start'=>$i);
 					$reading_symbol = true;
 					continue;
 				}
 
 				if ($reading_symbol && $transparent) {
-					$font_metrics[$alphabet{$symbol}]['end'] = $i;
+					$font_metrics[$this->alphabet{$symbol}]['end'] = $i;
 					$reading_symbol = false;
 					$symbol++;
 					continue;
@@ -234,7 +240,7 @@ class KCaptcha
 	 * @return string
 	 */
 	public function getKeyString()
-    {
+	{
 		return $this->keystring;
 	}
 }
