@@ -1,5 +1,5 @@
 <?php
-include('kcaptcha.php');
+include('KCaptcha.php');
 
 session_start();
 
