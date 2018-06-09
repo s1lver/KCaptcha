@@ -26,6 +26,13 @@ class KCaptcha
 	private $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
 
 	/**
+	 * Symbols used to draw CAPTCHA.
+	 * Alphabet without similar symbols (o=0, 1=l, i=j, t=f)
+	 * @var string
+	 */
+	private $allowed_symbols = '23456789abcdegikpqsvxyz';
+
+	/**
 	 * Generates keystring and image
 	 * KCaptcha constructor.
 	 */
@@ -49,9 +56,11 @@ class KCaptcha
 			while (true) {
 				$this->keystring = '';
 				for ($i = 0; $i < $length; $i++) {
-					$this->keystring .= $allowed_symbols{mt_rand(0,strlen($allowed_symbols)-1)};
+					$this->keystring .= $this->allowed_symbols{mt_rand(0,strlen($this->allowed_symbols)-1)};
 				}
-				if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) break;
+				if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
+					break;
+				}
 			}
 		
 			$font_file = $fonts[mt_rand(0, count($fonts)-1)];
@@ -93,7 +102,9 @@ class KCaptcha
 			// draw text
 			$x = 1;
 			$odd = mt_rand(0,1);
-			if ($odd == 0) $odd =- 1;
+			if ($odd == 0) {
+				$odd =- 1;
+			}
 			for ($i = 0; $i < $length; $i++) {
 				$m=$font_metrics[$this->keystring{$i}];
 
@@ -112,7 +123,9 @@ class KCaptcha
 								if ($opacity < 127) {
 									$left = $sx - $m['start'] + $x;
 									$py = $sy + $y;
-									if ($py > $height) break;
+									if ($py > $height) {
+										break;
+									}
 									for ($px = min($left, $width-1); $px > $left - 200 && $px >= 0; $px -= 1) {
 										$color = imagecolorat($img, $px, $py) & 0xff;
 										if ($color + $opacity < 170) { // 170 - threshold
@@ -206,7 +219,9 @@ class KCaptcha
 						$color_y * $frsx1 * $frsy +
 						$color_xy * $frsx * $frsy);
 
-					if ($newcolor > 255) $newcolor = 255;
+					if ($newcolor > 255) {
+						$newcolor = 255;
+					}
 					$newcolor = $newcolor / 255;
 					$newcolor0 = 1 - $newcolor;
 
