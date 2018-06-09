@@ -37,7 +37,7 @@ class KCaptcha
 	 * KCaptcha constructor.
 	 */
 	public function KCAPTCHA() {
-		require(dirname(__FILE__) . '/kcaptcha_config.php');
+		require __DIR__ . '/kcaptcha_config.php';
 		$fonts = array();
 		$fontsdir_absolute = dirname(__FILE__).'/'.$fontsdir;
 		if ($handle = opendir($fontsdir_absolute)) {
