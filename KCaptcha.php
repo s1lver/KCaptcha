@@ -233,7 +233,7 @@ class KCaptcha
 	 * Returns keystring
 	 * @return string
 	 */
-	function getKeyString()
+	public function getKeyString()
     {
 		return $this->keystring;
 	}
