@@ -16,6 +16,9 @@ namespace k_captcha;
 
 /**
  * Class KCaptcha
+ * @package k_captcha
+ *
+ * @property string $keystring @todo needed test
  */
 class KCaptcha
 {
@@ -33,13 +36,19 @@ class KCaptcha
 	private $allowed_symbols = '23456789abcdegikpqsvxyz';
 
 	/**
+	 * Folder with fonts
+	 * @var string
+	 */
+	private $fontsDir = 'fonts';
+
+	/**
 	 * Generates keystring and image
 	 * KCaptcha constructor.
 	 */
 	public function KCAPTCHA() {
 		require __DIR__.'/kcaptcha_config.php';
 		$fonts = array();
-		$fontsdir_absolute = __DIR__.DIRECTORY_SEPARATOR.$fontsdir;
+		$fontsdir_absolute = __DIR__.DIRECTORY_SEPARATOR.$this->fontsDir;
 		if ($handle = opendir($fontsdir_absolute)) {
 			while (false !== ($file = readdir($handle))) {
 				if (preg_match('/\.png$/i', $file)) {

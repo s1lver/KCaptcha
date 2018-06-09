@@ -1,9 +1,6 @@
 <?php
 # KCAPTCHA configuration file
 
-# folder with fonts
-$fontsdir = 'fonts';
-
 # CAPTCHA string length
 $length = mt_rand(5,7); # random 5 or 6 or 7
 //$length = 6;
