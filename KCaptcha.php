@@ -1,24 +1,27 @@
 <?php
-# KCAPTCHA PROJECT VERSION 2.0
+/**
+ * KCAPTCHA PROJECT VERSION 2.0
+ * Automatic test to tell computers and humans apart
+ * Copyright by Kruglov Sergei, 2006, 2007, 2008, 2011
+ * www.captcha.ru, www.kruglov.ru
+ * System requirements: PHP 4.0.6+ w/ GD
+ * KCAPTCHA is a free software. You can freely use it for developing own site or software.
+ * If you use this software as a part of own sofware, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
+ * As a default configuration, KCAPTCHA has a small credits text at bottom of CAPTCHA image.
+ * You can remove it, but I would be pleased if you left it. ;)
+ * See kcaptcha_config.php for customization
+ */
 
-# Automatic test to tell computers and humans apart
-
-# Copyright by Kruglov Sergei, 2006, 2007, 2008, 2011
-# www.captcha.ru, www.kruglov.ru
-
-# System requirements: PHP 4.0.6+ w/ GD
-
-# KCAPTCHA is a free software. You can freely use it for developing own site or software.
-# If you use this software as a part of own sofware, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
-# As a default configuration, KCAPTCHA has a small credits text at bottom of CAPTCHA image.
-# You can remove it, but I would be pleased if you left it. ;)
-
-# See kcaptcha_config.php for customization
-
+/**
+ * Class KCaptcha
+ */
 class KCaptcha
 {
-	// generates keystring and image
-	function KCAPTCHA()
+	/**
+	 * Generates keystring and image
+	 * KCaptcha constructor.
+	 */
+	public function KCAPTCHA()
     {
 		require(dirname(__FILE__) . '/kcaptcha_config.php');
 		$fonts = array();
@@ -226,7 +229,10 @@ class KCaptcha
 		}
 	}
 
-	// returns keystring
+	/**
+	 * Returns keystring
+	 * @return string
+	 */
 	function getKeyString()
     {
 		return $this->keystring;
