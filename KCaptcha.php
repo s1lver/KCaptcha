@@ -247,14 +247,14 @@ class KCaptcha
 		header('Cache-Control: no-store, no-cache, must-revalidate'); 
 		header('Cache-Control: post-check=0, pre-check=0', FALSE); 
 		header('Pragma: no-cache');
-		if (function_exists("imagejpeg")) {
-			header("Content-Type: image/jpeg");
+		if (function_exists('imagejpeg')) {
+			header('Content-Type: image/jpeg');
 			imagejpeg($img2, null, $jpeg_quality);
-		} else if(function_exists("imagegif")) {
-			header("Content-Type: image/gif");
+		} else if(function_exists('imagegif')) {
+			header('Content-Type: image/gif');
 			imagegif($img2);
-		} else if(function_exists("imagepng")) {
-			header("Content-Type: image/x-png");
+		} else if(function_exists('imagepng')) {
+			header('Content-Type: image/x-png');
 			imagepng($img2);
 		}
 	}
