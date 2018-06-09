@@ -12,6 +12,8 @@
  * See kcaptcha_config.php for customization
  */
 
+namespace k_captcha;
+
 /**
  * Class KCaptcha
  */
