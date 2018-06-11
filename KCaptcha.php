@@ -42,11 +42,86 @@ class KCaptcha
 	private $_fontsDir = 'fonts';
 
 	/**
+	 * CAPTCHA string length
+	 *  random 5 or 6 or 7
+	 * @var int
+	 */
+	public $length;
+
+	/**
+	 * CAPTCHA image size (you do not need to change it, this parameters is optimal)
+	 * @var int
+	 */
+	public $width;
+	public $height;
+
+	/**
+	 * Symbol's vertical fluctuation amplitude
+	 * @var int
+	 */
+	public $fluctuationAmplitude;
+
+	/**
+	 * Noise
+	 * $white_noise_density=0; // no white noise
+	 * $black_noise_density=0; // no black noise
+	 * @var
+	 */
+	public $whiteNoiseDensity;
+	public $blackNoiseDensity;
+
+	/**
+	 * Increase safety by prevention of spaces between symbols
+	 * @var bool
+	 */
+	public $noSpaces;
+
+	/**
+	 * Show credits
+	 * set to false to remove credits line. Credits adds 12 pixels to image height
+	 * @var bool1
+	 */
+	public $showCredits;
+
+	/**
+	 * If empty, HTTP_HOST will be shown
+	 * @var string
+	 */
+	public $credits;
+
+	/**
+	 * CAPTCHA image colors (RGB, 0-255)
+	 * @var array
+	 */
+	public $foregroundColor;
+	public $backgroundColor;
+
+	/**
+	 * JPEG quality of CAPTCHA image (bigger is better quality, but larger file size)
+	 * @var int
+	 */
+	public $jpegQuality;
+
+	public function __construct() {
+		$this->length = mt_rand(5,7);
+		$this->width = 160;
+		$this->height = 80;
+		$this->fluctuationAmplitude = 8;
+		$this->whiteNoiseDensity = 1/6;
+		$this->blackNoiseDensity = 1/30;
+		$this->noSpaces = true;
+		$this->showCredits = false;
+		$this->credits = '';
+		$this->foregroundColor = array(mt_rand(0,80), mt_rand(0,80), mt_rand(0,80));
+		$this->backgroundColor = array(mt_rand(220,255), mt_rand(220,255), mt_rand(220,255));
+		$this->jpegQuality = 90;
+	}
+
+	/**
 	 * Generates keystring and image
 	 * KCaptcha constructor.
 	 */
 	public function KCAPTCHA() {
-		require __DIR__.'/kcaptcha_config.php';
 		$fonts = array();
 		$fontsdir_absolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
 		if ($handle = opendir($fontsdir_absolute)) {
