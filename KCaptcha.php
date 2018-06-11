@@ -366,10 +366,12 @@ class KCaptcha
 				$black = imagecolorallocate($img, 0, 0, 0);
 				$gray = imagecolorallocate($img, 100, 100, 100);
 
-				for ($x = 0; $x < imagesx($img); $x++) {
+				$imgWidth = imagesx($img);
+				for ($x = 0; $x < $imgWidth; $x++) {
 					$space = true;
 					$column_opacity = 0;
-					for ($y = 1; $y < imagesy($img); $y++) {
+					$imgHeight = imagesy($img);
+					for ($y = 1; $y < $imgHeight; $y++) {
 						$rgb = ImageColorAt($img, $x, $y);
 						$opacity = $rgb>>24;
 						if ($opacity !== 127) {
