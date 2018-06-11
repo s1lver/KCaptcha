@@ -1,5 +1,8 @@
 <?php
 /**
+ * New implementation - Moiseenko Evgeniy. 2018
+ * The original idea - Kruglov Sergei
+ *
  * KCAPTCHA PROJECT VERSION 2.0
  * Automatic test to tell computers and humans apart
  * Copyright by Kruglov Sergei, 2006, 2007, 2008, 2011
@@ -8,8 +11,6 @@
  * KCAPTCHA is a free software. You can freely use it for developing own site or software.
  * If you use this software as a part of own sofware, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
  * As a default configuration, KCAPTCHA has a small credits text at bottom of CAPTCHA image.
- * You can remove it, but I would be pleased if you left it. ;)
- * See kcaptcha_config.php for customization
  */
 
 namespace k_captcha;
@@ -43,7 +44,7 @@ class KCaptcha
 
 	/**
 	 * CAPTCHA string length
-	 *  random 5 or 6 or 7
+	 * Random 5 or 6 or 7
 	 * @var int
 	 */
 	public $length;
@@ -63,8 +64,8 @@ class KCaptcha
 
 	/**
 	 * Noise
-	 * $white_noise_density=0; // no white noise
-	 * $black_noise_density=0; // no black noise
+	 * $whiteNoiseDensity = 0; // no white noise
+	 * $blackNoiseDensity = 0; // no black noise
 	 * @var
 	 */
 	public $whiteNoiseDensity;
@@ -127,11 +128,11 @@ class KCaptcha
 	 */
 	private function _init() {
 		$fonts = [];
-		$fontsdirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
-		if ($handle = opendir($fontsdirAbsolute)) {
+		$fontsDirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
+		if ($handle = opendir($fontsDirAbsolute)) {
 			while (false !== ($file = readdir($handle))) {
 				if (preg_match('/\.png$/i', $file)) {
-					$fonts[] = $fontsdirAbsolute.'/'.$file;
+					$fonts[] = $fontsDirAbsolute.'/'.$file;
 				}
 			}
 			closedir($handle);
@@ -140,7 +141,7 @@ class KCaptcha
 		$alphabetLength = strlen($this->_alphabet);
 		
 		do {
-			// generating random keystring
+			//Generating random key string
 			while (true) {
 				$this->keystring = '';
 				for ($i = 0; $i < $this->length; $i++) {
@@ -162,7 +163,7 @@ class KCaptcha
 			$symbol = 0;
 			$readingSymbol = false;
 
-			// loading font
+			//Loading font
 			for ($i = 0; $i < $fontFileWidth && $symbol < $alphabetLength; $i++) {
 				$transparent = (imagecolorat($font, $i, 0) >> 24) === 127;
 
@@ -187,7 +188,7 @@ class KCaptcha
 
 			imagefilledrectangle($img, 0, 0, $this->width - 1, $this->height - 1, $white);
 
-			// draw text
+			//Draw text
 			$x = 1;
 			$odd = random_int(0, 1);
 			if ($odd === 0) {
@@ -239,7 +240,7 @@ class KCaptcha
 			}
 		} while ($x >= $this->width - 10); // while not fit in canvas
 
-		//noise
+		//Noise
 		$white = imagecolorallocate($font, 255, 255, 255);
 		$black = imagecolorallocate($font, 0, 0, 0);
 		for ($i = 0; $i < (($this->height - 30) * $x) * $this->whiteNoiseDensity; $i++) {
@@ -249,7 +250,7 @@ class KCaptcha
 			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $black);
 		}
 
-		// credits. To remove, see configuration file
+		//Credits. To remove, see configuration file
 		$img2 = imagecreatetruecolor($this->width, $this->height + ($this->showCredits ? 12 : 0));
 		$foreground = imagecolorallocate($img2, $this->foregroundColor[0], $this->foregroundColor[1], $this->foregroundColor[2]);
 		$background = imagecolorallocate($img2, $this->backgroundColor[0], $this->backgroundColor[1], $this->backgroundColor[2]);
@@ -258,17 +259,17 @@ class KCaptcha
 		$credits = empty($this->credits) ? $_SERVER['HTTP_HOST'] : $this->credits;
 		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * strlen($credits) / 2, $this->height - 2, $credits, $background);
 
-		// periods
+		//Periods
 		$rand[] = random_int(750000, 1200000) / 10000000;
 		$rand[] = random_int(750000, 1200000) / 10000000;
 		$rand[] = random_int(750000, 1200000) / 10000000;
 		$rand[] = random_int(750000, 1200000) / 10000000;
-		// phases
+		//Phases
 		$rand[] = random_int(0, 31415926) / 10000000;
 		$rand[] = random_int(0, 31415926) / 10000000;
 		$rand[] = random_int(0, 31415926) / 10000000;
 		$rand[] = random_int(0, 31415926) / 10000000;
-		// amplitudes
+		//Amplitudes
 		$rand[] = random_int(330, 420) / 110;
 		$rand[] = random_int(330, 450) / 100;
 
@@ -279,7 +280,7 @@ class KCaptcha
 	/**
 	 * Wave distortion
 	 * @param array $rand
-	 * @param $center
+	 * @param int $center
 	 * @param $img
 	 * @param $img2
 	 */
@@ -354,7 +355,7 @@ class KCaptcha
 	}
 
 	/**
-	 * Returns keystring
+	 * Returns key string
 	 * @return string
 	 */
 	public function getKeyString()
