@@ -398,8 +398,6 @@ class KCaptcha
 				$img = imagecreatefrompng('../fonts0/'.$file);
 				imagealphablending($img, false);
 				imagesavealpha($img, true);
-				$transparent = imagecolorallocatealpha($img, 255, 255, 255, 127);
-				$white = imagecolorallocate($img, 255, 255, 255);
 				$black = imagecolorallocate($img, 0, 0, 0);
 				$gray = imagecolorallocate($img, 100, 100, 100);
 
