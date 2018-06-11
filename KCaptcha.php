@@ -106,7 +106,8 @@ class KCaptcha
 	/**
 	 * KCaptcha constructor.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->length = random_int(5, 7);
 		$this->width = 160;
 		$this->height = 80;
@@ -126,7 +127,8 @@ class KCaptcha
 	/**
 	 * Generates key string and image
 	 */
-	private function _init() {
+	private function _init()
+	{
 		$fonts = [];
 		$fontsDirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
 		if ($handle = opendir($fontsDirAbsolute)) {
@@ -337,7 +339,8 @@ class KCaptcha
 	/**
 	 * @param $img
 	 */
-	private function _setHeader($img) {
+	private function _setHeader($img)
+	{
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', false);
@@ -367,7 +370,8 @@ class KCaptcha
 	 * Preparing PNG fonts to use with KCAPTCHA.
 	 * Reads files from folder "../fonts0", scans for symbols ans spaces and writes new font file with cached symbols positions to folder "../fonts"
 	 */
-	public function fontPrepare() {
+	public function fontPrepare()
+	{
 		if ($handle = opendir('../fonts0')) {
 			while (false !== ($file = readdir($handle))) {
 				if ($file === '.' || $file === '..') {
