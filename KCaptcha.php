@@ -249,8 +249,6 @@ class KCaptcha
 			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $black);
 		}
 
-		$center = $x / 2;
-
 		// credits. To remove, see configuration file
 		$img2 = imagecreatetruecolor($this->width, $this->height + ($this->showCredits ? 12 : 0));
 		$foreground = imagecolorallocate($img2, $this->foregroundColor[0], $this->foregroundColor[1], $this->foregroundColor[2]);
@@ -261,24 +259,36 @@ class KCaptcha
 		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * strlen($credits) / 2, $this->height - 2, $credits, $background);
 
 		// periods
-		$rand1 = random_int(750000, 1200000) / 10000000;
-		$rand2 = random_int(750000, 1200000) / 10000000;
-		$rand3 = random_int(750000, 1200000) / 10000000;
-		$rand4 = random_int(750000, 1200000) / 10000000;
+		$rand[] = random_int(750000, 1200000) / 10000000;
+		$rand[] = random_int(750000, 1200000) / 10000000;
+		$rand[] = random_int(750000, 1200000) / 10000000;
+		$rand[] = random_int(750000, 1200000) / 10000000;
 		// phases
-		$rand5 = random_int(0, 31415926) / 10000000;
-		$rand6 = random_int(0, 31415926) / 10000000;
-		$rand7 = random_int(0, 31415926) / 10000000;
-		$rand8 = random_int(0, 31415926) / 10000000;
+		$rand[] = random_int(0, 31415926) / 10000000;
+		$rand[] = random_int(0, 31415926) / 10000000;
+		$rand[] = random_int(0, 31415926) / 10000000;
+		$rand[] = random_int(0, 31415926) / 10000000;
 		// amplitudes
-		$rand9 = random_int(330, 420) / 110;
-		$rand10 = random_int(330, 450) / 100;
+		$rand[] = random_int(330, 420) / 110;
+		$rand[] = random_int(330, 450) / 100;
 
-		//wave distortion
+		$this->_waveDistortion($rand, $x / 2, $img, $img2);
+		$this->_setHeader($img2);
+	}
+
+	/**
+	 * Wave distortion
+	 * @param array $rand
+	 * @param $center
+	 * @param $img
+	 * @param $img2
+	 */
+	private function _waveDistortion($rand, $center, $img, $img2)
+	{
 		for ($x = 0; $x < $this->width; $x++) {
 			for ($y = 0; $y < $this->height; $y++) {
-				$sx = $x + (sin($x * $rand1 + $rand5) + sin($y * $rand3 + $rand6)) * $rand9 - $this->width / 2 + $center + 1;
-				$sy = $y + (sin($x * $rand2 + $rand7) + sin($y * $rand4 + $rand8)) * $rand10;
+				$sx = $x + (sin($x * $rand[0] + $rand[5]) + sin($y * $rand[2] + $rand[5])) * $rand[8] - $this->width / 2 + $center + 1;
+				$sy = $y + (sin($x * $rand[1] + $rand[6]) + sin($y * $rand[3] + $rand[7])) * $rand[9];
 
 				if ($sx < 0 || $sy < 0 || $sx >= $this->width - 1 || $sy >= $this->height - 1) {
 					continue;
@@ -321,20 +331,25 @@ class KCaptcha
 				imagesetpixel($img2, $x, $y, imagecolorallocate($img2, $newRed, $newGreen, $newBlue));
 			}
 		}
-		
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); 
-		header('Cache-Control: no-store, no-cache, must-revalidate'); 
+	}
+
+	/**
+	 * @param $img
+	 */
+	private function _setHeader($img) {
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', false);
 		header('Pragma: no-cache');
 		if (function_exists('imagejpeg')) {
 			header('Content-Type: image/jpeg');
-			imagejpeg($img2, null, $this->jpegQuality);
+			imagejpeg($img, null, $this->jpegQuality);
 		} else if(function_exists('imagegif')) {
 			header('Content-Type: image/gif');
-			imagegif($img2);
+			imagegif($img);
 		} else if(function_exists('imagepng')) {
 			header('Content-Type: image/x-png');
-			imagepng($img2);
+			imagepng($img);
 		}
 	}
 
