@@ -18,7 +18,7 @@ namespace k_captcha;
  * Class KCaptcha
  * @package k_captcha
  *
- * @property string $keystring @todo needed test
+ * @property string $keystring
  */
 class KCaptcha
 {
