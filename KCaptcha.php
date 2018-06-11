@@ -164,7 +164,7 @@ class KCaptcha
 
 			// loading font
 			for ($i = 0; $i < $fontfileWidth && $symbol < $alphabetLength; $i++) {
-				$transparent = (imagecolorat($font, $i, 0) >> 24) == 127;
+				$transparent = (imagecolorat($font, $i, 0) >> 24) === 127;
 
 				if (!$readingSymbol && !$transparent) {
 					$fontMetrics[$this->_alphabet{$symbol}] = ['start' => $i];
@@ -190,7 +190,7 @@ class KCaptcha
 			// draw text
 			$x = 1;
 			$odd = random_int(0, 1);
-			if ($odd == 0) {
+			if ($odd === 0) {
 				$odd =- 1;
 			}
 			for ($i = 0; $i < $this->length; $i++) {
@@ -227,7 +227,7 @@ class KCaptcha
 								}
 							}
 						}
-						if ($shift == 10000) {
+						if ($shift === 10000) {
 							$shift = random_int(4,6);
 						}
 					}
@@ -289,9 +289,9 @@ class KCaptcha
 					$color_xy = imagecolorat($img, $sx + 1, $sy + 1) & 0xFF;
 				}
 
-				if ($color == 255 && $color_x == 255 && $color_y == 255 && $color_xy == 255) {
+				if ($color === 255 && $color_x === 255 && $color_y === 255 && $color_xy === 255) {
 					continue;
-				} else if ($color == 0 && $color_x == 0 && $color_y == 0 && $color_xy == 0) {
+				} else if ($color === 0 && $color_x === 0 && $color_y === 0 && $color_xy === 0) {
 					$newred = $this->foregroundColor[0];
 					$newgreen = $this->foregroundColor[1];
 					$newblue = $this->foregroundColor[2];
