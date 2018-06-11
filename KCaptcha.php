@@ -150,7 +150,7 @@ class KCaptcha
 			imagealphablending($font, true);
 
 			$fontFileWidth = imagesx($font);
-			$fontFileHeight = imagesy($font)-1;
+			$fontFileHeight = imagesy($font) - 1;
 
 			$fontMetrics = [];
 			$symbol = 0;
@@ -192,14 +192,14 @@ class KCaptcha
 					+ random_int(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
 					+ ($this->height - $fontFileHeight) / 2;
 
+				$shift = 1;
 				if ($this->noSpaces) {
 					$shift = 0;
 					if ($i > 0) {
 						$shift = 10000;
 						for ($sy = 3; $sy < $fontFileHeight - 10; ++$sy) {
 							for ($sx = $m['start'] - 1; $sx < $m['end']; ++$sx) {
-								$rgb = imagecolorat($font, $sx, $sy);
-								$opacity = $rgb>>24;
+								$opacity = imagecolorat($font, $sx, $sy)>>24;
 								if ($opacity < 127) {
 									$left = $sx - $m['start'] + $x;
 									$py = $sy + $y;
@@ -207,8 +207,7 @@ class KCaptcha
 										break;
 									}
 									for ($px = min($left, $this->width-1); $px > $left - 200 && $px >= 0; --$px) {
-										$color = imagecolorat($img, $px, $py) & 0xff;
-										if ($color + $opacity < 170) { // 170 - threshold
+										if (imagecolorat($img, $px, $py) & 0xff + $opacity < 170) { //170 - threshold
 											if ($shift > $left - $px) {
 												$shift = $left - $px;
 											}
@@ -223,8 +222,6 @@ class KCaptcha
 							$shift = random_int(4,6);
 						}
 					}
-				} else {
-					$shift = 1;
 				}
 				imagecopy($img, $font, $x - $shift, $y, $m['start'], 1, $m['end'] - $m['start'], $fontFileHeight);
 				$x += $m['end'] - $m['start'] - $shift;
@@ -314,17 +311,15 @@ class KCaptcha
 					continue;
 				}
 				$color = imagecolorat($img, $sx, $sy) & 0xFF;
-				$color_x = imagecolorat($img, $sx + 1, $sy) & 0xFF;
-				$color_y = imagecolorat($img, $sx, $sy + 1) & 0xFF;
-				$color_xy = imagecolorat($img, $sx + 1, $sy + 1) & 0xFF;
+				$colorX = imagecolorat($img, $sx + 1, $sy) & 0xFF;
+				$colorY = imagecolorat($img, $sx, $sy + 1) & 0xFF;
+				$colorXY = imagecolorat($img, $sx + 1, $sy + 1) & 0xFF;
 
-				if ($color === 255 && $color_x === 255 && $color_y === 255 && $color_xy === 255) {
+				if ($color === 255 && $colorX === 255 && $colorY === 255 && $colorXY === 255) {
 					continue;
 				}
-				if ($color === 0 && $color_x === 0 && $color_y === 0 && $color_xy === 0) {
-					$newRed = $this->foregroundColor[0];
-					$newGreen = $this->foregroundColor[1];
-					$newBlue = $this->foregroundColor[2];
+				if ($color === 0 && $colorX === 0 && $colorY === 0 && $colorXY === 0) {
+					[$newRed, $newGreen, $newBlue] = $this->foregroundColor;
 				} else {
 					$frsx = $sx - floor($sx);
 					$frsy = $sy - floor($sy);
@@ -333,9 +328,9 @@ class KCaptcha
 
 					$newColor = (
 						$color * $frsx1 * $frsy1 +
-						$color_x * $frsx * $frsy1 +
-						$color_y * $frsx1 * $frsy +
-						$color_xy * $frsx * $frsy);
+						$colorX * $frsx * $frsy1 +
+						$colorY * $frsx1 * $frsy +
+						$colorXY * $frsx * $frsy);
 
 					if ($newColor > 255) {
 						$newColor = 255;
