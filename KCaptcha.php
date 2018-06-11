@@ -155,15 +155,15 @@ class KCaptcha
 			$font = imagecreatefrompng($fontFile);
 			imagealphablending($font, true);
 
-			$fontfileWidth = imagesx($font);
-			$fontfileHeight = imagesy($font)-1;
+			$fontFileWidth = imagesx($font);
+			$fontFileHeight = imagesy($font)-1;
 			
 			$fontMetrics = [];
 			$symbol = 0;
 			$readingSymbol = false;
 
 			// loading font
-			for ($i = 0; $i < $fontfileWidth && $symbol < $alphabetLength; $i++) {
+			for ($i = 0; $i < $fontFileWidth && $symbol < $alphabetLength; $i++) {
 				$transparent = (imagecolorat($font, $i, 0) >> 24) === 127;
 
 				if (!$readingSymbol && !$transparent) {
@@ -198,13 +198,13 @@ class KCaptcha
 
 				$y = (($i % 2) * $this->fluctuationAmplitude - $this->fluctuationAmplitude / 2) * $odd
 					+ random_int(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
-					+ ($this->height - $fontfileHeight) / 2;
+					+ ($this->height - $fontFileHeight) / 2;
 
 				if ($this->noSpaces) {
 					$shift = 0;
 					if ($i > 0) {
 						$shift = 10000;
-						for ($sy = 3; $sy < $fontfileHeight-10; $sy += 1) {
+						for ($sy = 3; $sy < $fontFileHeight-10; $sy += 1) {
 							for ($sx = $m['start'] - 1; $sx < $m['end']; $sx += 1) {
 								$rgb = imagecolorat($font, $sx, $sy);
 								$opacity = $rgb>>24;
@@ -234,7 +234,7 @@ class KCaptcha
 				} else {
 					$shift = 1;
 				}
-				imagecopy($img, $font, $x - $shift, $y, $m['start'], 1, $m['end'] - $m['start'], $fontfileHeight);
+				imagecopy($img, $font, $x - $shift, $y, $m['start'], 1, $m['end'] - $m['start'], $fontFileHeight);
 				$x += $m['end'] - $m['start'] - $shift;
 			}
 		} while ($x >= $this->width - 10); // while not fit in canvas
@@ -292,39 +292,39 @@ class KCaptcha
 				if ($color === 255 && $color_x === 255 && $color_y === 255 && $color_xy === 255) {
 					continue;
 				} else if ($color === 0 && $color_x === 0 && $color_y === 0 && $color_xy === 0) {
-					$newred = $this->foregroundColor[0];
-					$newgreen = $this->foregroundColor[1];
-					$newblue = $this->foregroundColor[2];
+					$newRed = $this->foregroundColor[0];
+					$newGreen = $this->foregroundColor[1];
+					$newBlue = $this->foregroundColor[2];
 				} else {
 					$frsx = $sx - floor($sx);
 					$frsy = $sy - floor($sy);
 					$frsx1 = 1 - $frsx;
 					$frsy1 = 1 - $frsy;
 
-					$newcolor = (
+					$newColor = (
 						$color * $frsx1 * $frsy1 +
 						$color_x * $frsx * $frsy1 +
 						$color_y * $frsx1 * $frsy +
 						$color_xy * $frsx * $frsy);
 
-					if ($newcolor > 255) {
-						$newcolor = 255;
+					if ($newColor > 255) {
+						$newColor = 255;
 					}
-					$newcolor = $newcolor / 255;
-					$newcolor0 = 1 - $newcolor;
+					$newColor /=  255;
+					$newColor0 = 1 - $newColor;
 
-					$newred = $newcolor0 * $this->foregroundColor[0] + $newcolor * $this->backgroundColor[0];
-					$newgreen = $newcolor0 * $this->foregroundColor[1] + $newcolor * $this->backgroundColor[1];
-					$newblue = $newcolor0 * $this->foregroundColor[2] + $newcolor * $this->backgroundColor[2];
+					$newRed = $newColor0 * $this->foregroundColor[0] + $newColor * $this->backgroundColor[0];
+					$newGreen = $newColor0 * $this->foregroundColor[1] + $newColor * $this->backgroundColor[1];
+					$newBlue = $newColor0 * $this->foregroundColor[2] + $newColor * $this->backgroundColor[2];
 				}
 
-				imagesetpixel($img2, $x, $y, imagecolorallocate($img2, $newred, $newgreen, $newblue));
+				imagesetpixel($img2, $x, $y, imagecolorallocate($img2, $newRed, $newGreen, $newBlue));
 			}
 		}
 		
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); 
 		header('Cache-Control: no-store, no-cache, must-revalidate'); 
-		header('Cache-Control: post-check=0, pre-check=0', FALSE); 
+		header('Cache-Control: post-check=0, pre-check=0', false);
 		header('Pragma: no-cache');
 		if (function_exists('imagejpeg')) {
 			header('Content-Type: image/jpeg');
