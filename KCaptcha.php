@@ -106,7 +106,7 @@ class KCaptcha
 	 * KCaptcha constructor.
 	 */
 	public function __construct() {
-		$this->length = mt_rand(5, 7);
+		$this->length = random_int(5, 7);
 		$this->width = 160;
 		$this->height = 80;
 		$this->fluctuationAmplitude = 8;
@@ -115,8 +115,8 @@ class KCaptcha
 		$this->noSpaces = true;
 		$this->showCredits = false;
 		$this->credits = '';
-		$this->foregroundColor = [mt_rand(0, 80), mt_rand(0, 80), mt_rand(0, 80)];
-		$this->backgroundColor = [mt_rand(220, 255), mt_rand(220, 255), mt_rand(220, 255)];
+		$this->foregroundColor = [random_int(0, 80), random_int(0, 80), random_int(0, 80)];
+		$this->backgroundColor = [random_int(220, 255), random_int(220, 255), random_int(220, 255)];
 		$this->jpegQuality = 90;
 
 		$this->_init();
@@ -144,14 +144,14 @@ class KCaptcha
 			while (true) {
 				$this->keystring = '';
 				for ($i = 0; $i < $this->length; $i++) {
-					$this->keystring .= $this->_allowedSymbols{mt_rand(0, strlen($this->_allowedSymbols) - 1)};
+					$this->keystring .= $this->_allowedSymbols{random_int(0, strlen($this->_allowedSymbols) - 1)};
 				}
 				if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
 					break;
 				}
 			}
 		
-			$fontFile = $fonts[mt_rand(0, count($fonts) - 1)];
+			$fontFile = $fonts[random_int(0, count($fonts) - 1)];
 			$font = imagecreatefrompng($fontFile);
 			imagealphablending($font, true);
 
@@ -189,7 +189,7 @@ class KCaptcha
 
 			// draw text
 			$x = 1;
-			$odd = mt_rand(0,1);
+			$odd = random_int(0, 1);
 			if ($odd == 0) {
 				$odd =- 1;
 			}
@@ -197,7 +197,7 @@ class KCaptcha
 				$m = $fontMetrics[$this->keystring{$i}];
 
 				$y = (($i % 2) * $this->fluctuationAmplitude - $this->fluctuationAmplitude / 2) * $odd
-					+ mt_rand(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
+					+ random_int(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
 					+ ($this->height - $fontfileHeight) / 2;
 
 				if ($this->noSpaces) {
@@ -228,7 +228,7 @@ class KCaptcha
 							}
 						}
 						if ($shift == 10000) {
-							$shift = mt_rand(4,6);
+							$shift = random_int(4,6);
 						}
 					}
 				} else {
@@ -243,10 +243,10 @@ class KCaptcha
 		$white = imagecolorallocate($font, 255, 255, 255);
 		$black = imagecolorallocate($font, 0, 0, 0);
 		for ($i = 0; $i < (($this->height - 30) * $x) * $this->whiteNoiseDensity; $i++) {
-			imagesetpixel($img, mt_rand(0, $x - 1), mt_rand(10, $this->height - 15), $white);
+			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $white);
 		}
 		for ($i = 0; $i < (($this->height - 30) * $x) * $this->blackNoiseDensity; $i++) {
-			imagesetpixel($img, mt_rand(0, $x - 1), mt_rand(10, $this->height - 15), $black);
+			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $black);
 		}
 
 		$center = $x / 2;
@@ -261,18 +261,18 @@ class KCaptcha
 		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * strlen($credits) / 2, $this->height - 2, $credits, $background);
 
 		// periods
-		$rand1 = mt_rand(750000, 1200000) / 10000000;
-		$rand2 = mt_rand(750000, 1200000) / 10000000;
-		$rand3 = mt_rand(750000, 1200000) / 10000000;
-		$rand4 = mt_rand(750000, 1200000) / 10000000;
+		$rand1 = random_int(750000, 1200000) / 10000000;
+		$rand2 = random_int(750000, 1200000) / 10000000;
+		$rand3 = random_int(750000, 1200000) / 10000000;
+		$rand4 = random_int(750000, 1200000) / 10000000;
 		// phases
-		$rand5 = mt_rand(0, 31415926) / 10000000;
-		$rand6 = mt_rand(0, 31415926) / 10000000;
-		$rand7 = mt_rand(0, 31415926) / 10000000;
-		$rand8 = mt_rand(0, 31415926) / 10000000;
+		$rand5 = random_int(0, 31415926) / 10000000;
+		$rand6 = random_int(0, 31415926) / 10000000;
+		$rand7 = random_int(0, 31415926) / 10000000;
+		$rand8 = random_int(0, 31415926) / 10000000;
 		// amplitudes
-		$rand9 = mt_rand(330, 420) / 110;
-		$rand10 = mt_rand(330, 450) / 100;
+		$rand9 = random_int(330, 420) / 110;
+		$rand10 = random_int(330, 450) / 100;
 
 		//wave distortion
 		for ($x = 0; $x < $this->width; $x++) {
