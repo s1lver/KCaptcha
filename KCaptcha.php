@@ -118,13 +118,14 @@ class KCaptcha
 		$this->foregroundColor = array(mt_rand(0, 80), mt_rand(0, 80), mt_rand(0, 80));
 		$this->backgroundColor = array(mt_rand(220, 255), mt_rand(220, 255), mt_rand(220, 255));
 		$this->jpegQuality = 90;
+
+		$this->_init();
 	}
 
 	/**
-	 * Generates keystring and image
-	 * KCaptcha constructor.
+	 * Generates key string and image
 	 */
-	public function KCAPTCHA() {
+	private function _init() {
 		$fonts = array();
 		$fontsdirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
 		if ($handle = opendir($fontsdirAbsolute)) {
