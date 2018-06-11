@@ -359,8 +359,8 @@ class KCaptcha
 				}
 
 				$img = imagecreatefrompng('../fonts0/'.$file);
-				imageAlphaBlending($img, false);
-				imageSaveAlpha($img, true);
+				imagealphablending($img, false);
+				imagesavealpha($img, true);
 				$transparent = imagecolorallocatealpha($img, 255, 255, 255, 127);
 				$white = imagecolorallocate($img, 255, 255, 255);
 				$black = imagecolorallocate($img, 0, 0, 0);
@@ -372,7 +372,7 @@ class KCaptcha
 					$column_opacity = 0;
 					$imgHeight = imagesy($img);
 					for ($y = 1; $y < $imgHeight; $y++) {
-						$rgb = ImageColorAt($img, $x, $y);
+						$rgb = imagecolorat($img, $x, $y);
 						$opacity = $rgb>>24;
 						if ($opacity !== 127) {
 							$space = false;
