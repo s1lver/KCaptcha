@@ -177,8 +177,6 @@ class KCaptcha
 			$img = imagecreatetruecolor($this->width, $this->height);
 			imagealphablending($img, true);
 			$white = imagecolorallocate($img, 255, 255, 255);
-			$black = imagecolorallocate($img, 0, 0, 0);
-
 			imagefilledrectangle($img, 0, 0, $this->width - 1, $this->height - 1, $white);
 
 			//Draw text
