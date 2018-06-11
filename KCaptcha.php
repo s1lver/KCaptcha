@@ -115,8 +115,8 @@ class KCaptcha
 		$this->noSpaces = true;
 		$this->showCredits = false;
 		$this->credits = '';
-		$this->foregroundColor = array(mt_rand(0, 80), mt_rand(0, 80), mt_rand(0, 80));
-		$this->backgroundColor = array(mt_rand(220, 255), mt_rand(220, 255), mt_rand(220, 255));
+		$this->foregroundColor = [mt_rand(0, 80), mt_rand(0, 80), mt_rand(0, 80)];
+		$this->backgroundColor = [mt_rand(220, 255), mt_rand(220, 255), mt_rand(220, 255)];
 		$this->jpegQuality = 90;
 
 		$this->_init();
@@ -126,7 +126,7 @@ class KCaptcha
 	 * Generates key string and image
 	 */
 	private function _init() {
-		$fonts = array();
+		$fonts = [];
 		$fontsdirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
 		if ($handle = opendir($fontsdirAbsolute)) {
 			while (false !== ($file = readdir($handle))) {
@@ -158,7 +158,7 @@ class KCaptcha
 			$fontfileWidth = imagesx($font);
 			$fontfileHeight = imagesy($font)-1;
 			
-			$fontMetrics = array();
+			$fontMetrics = [];
 			$symbol = 0;
 			$readingSymbol = false;
 
@@ -167,7 +167,7 @@ class KCaptcha
 				$transparent = (imagecolorat($font, $i, 0) >> 24) == 127;
 
 				if (!$readingSymbol && !$transparent) {
-					$fontMetrics[$this->_alphabet{$symbol}] = array('start' => $i);
+					$fontMetrics[$this->_alphabet{$symbol}] = ['start' => $i];
 					$readingSymbol = true;
 					continue;
 				}
