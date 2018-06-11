@@ -282,16 +282,16 @@ class KCaptcha
 
 				if ($sx < 0 || $sy < 0 || $sx >= $this->width - 1 || $sy >= $this->height - 1) {
 					continue;
-				} else {
-					$color = imagecolorat($img, $sx, $sy) & 0xFF;
-					$color_x = imagecolorat($img, $sx + 1, $sy) & 0xFF;
-					$color_y = imagecolorat($img, $sx, $sy + 1) & 0xFF;
-					$color_xy = imagecolorat($img, $sx + 1, $sy + 1) & 0xFF;
 				}
+				$color = imagecolorat($img, $sx, $sy) & 0xFF;
+				$color_x = imagecolorat($img, $sx + 1, $sy) & 0xFF;
+				$color_y = imagecolorat($img, $sx, $sy + 1) & 0xFF;
+				$color_xy = imagecolorat($img, $sx + 1, $sy + 1) & 0xFF;
 
 				if ($color === 255 && $color_x === 255 && $color_y === 255 && $color_xy === 255) {
 					continue;
-				} else if ($color === 0 && $color_x === 0 && $color_y === 0 && $color_xy === 0) {
+				}
+				if ($color === 0 && $color_x === 0 && $color_y === 0 && $color_xy === 0) {
 					$newRed = $this->foregroundColor[0];
 					$newGreen = $this->foregroundColor[1];
 					$newBlue = $this->foregroundColor[2];
