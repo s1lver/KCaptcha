@@ -9,7 +9,7 @@
  * www.captcha.ru, www.kruglov.ru
  * System requirements: PHP 4.0.6+ w/ GD
  * KCAPTCHA is a free software. You can freely use it for developing own site or software.
- * If you use this software as a part of own sofware, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
+ * If you use this software as a part of own software, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
  * As a default configuration, KCAPTCHA has a small credits text at bottom of CAPTCHA image.
  */
 
@@ -145,14 +145,13 @@ class KCaptcha
 		do {
 			$this->_generateKeyString();
 
-			$fontFile = $fonts[random_int(0, count($fonts) - 1)];
-			$font = imagecreatefrompng($fontFile);
+			$font = imagecreatefrompng($fonts[random_int(0, count($fonts) - 1)]);
 			imagealphablending($font, true);
 
 			$fontFileWidth = imagesx($font);
 			$fontFileHeight = imagesy($font) - 1;
-
 			$fontMetrics = [];
+
 			$symbol = 0;
 			$readingSymbol = false;
 
@@ -183,11 +182,10 @@ class KCaptcha
 			$x = 1;
 			$odd = random_int(0, 1);
 			if ($odd === 0) {
-				$odd =- 1;
+				--$odd;
 			}
 			for ($i = 0; $i < $this->length; $i++) {
 				$m = $fontMetrics[$this->keystring{$i}];
-
 				$y = (($i % 2) * $this->fluctuationAmplitude - $this->fluctuationAmplitude / 2) * $odd
 					+ random_int(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
 					+ ($this->height - $fontFileHeight) / 2;
@@ -321,16 +319,16 @@ class KCaptcha
 				if ($color === 0 && $colorX === 0 && $colorY === 0 && $colorXY === 0) {
 					[$newRed, $newGreen, $newBlue] = $this->foregroundColor;
 				} else {
-					$frsx = $sx - floor($sx);
-					$frsy = $sy - floor($sy);
-					$frsx1 = 1 - $frsx;
-					$frsy1 = 1 - $frsy;
+					$frSX = $sx - floor($sx);
+					$frSY = $sy - floor($sy);
+					$frSX1 = 1 - $frSX;
+					$frSY1 = 1 - $frSY;
 
 					$newColor = (
-						$color * $frsx1 * $frsy1 +
-						$colorX * $frsx * $frsy1 +
-						$colorY * $frsx1 * $frsy +
-						$colorXY * $frsx * $frsy);
+						$color * $frSX1 * $frSY1 +
+						$colorX * $frSX * $frSY1 +
+						$colorY * $frSX1 * $frSY +
+						$colorXY * $frSX * $frSY);
 
 					if ($newColor > 255) {
 						$newColor = 255;
