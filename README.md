@@ -1,6 +1,8 @@
 # KCaptcha
 Updated implementation KCaptcha
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/b6731ddccaeff7f4222e/maintainability)](https://codeclimate.com/github/s1lver/KCaptcha/maintainability)
+
 Improved version of Captcha Kruglov Sergei. Adapted to modern development realities, support for PSR and PHP 7.
 
 ### Original description and license
