@@ -196,8 +196,8 @@ class KCaptcha
 					$shift = 0;
 					if ($i > 0) {
 						$shift = 10000;
-						for ($sy = 3; $sy < $fontFileHeight-10; $sy += 1) {
-							for ($sx = $m['start'] - 1; $sx < $m['end']; $sx += 1) {
+						for ($sy = 3; $sy < $fontFileHeight - 10; ++$sy) {
+							for ($sx = $m['start'] - 1; $sx < $m['end']; ++$sx) {
 								$rgb = imagecolorat($font, $sx, $sy);
 								$opacity = $rgb>>24;
 								if ($opacity < 127) {
@@ -206,7 +206,7 @@ class KCaptcha
 									if ($py > $this->height) {
 										break;
 									}
-									for ($px = min($left, $this->width-1); $px > $left - 200 && $px >= 0; $px -= 1) {
+									for ($px = min($left, $this->width-1); $px > $left - 200 && $px >= 0; --$px) {
 										$color = imagecolorat($img, $px, $py) & 0xff;
 										if ($color + $opacity < 170) { // 170 - threshold
 											if ($shift > $left - $px) {
