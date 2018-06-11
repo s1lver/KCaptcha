@@ -141,26 +141,17 @@ class KCaptcha
 		}
 	
 		$alphabetLength = strlen($this->_alphabet);
-		
+
 		do {
-			//Generating random key string
-			while (true) {
-				$this->keystring = '';
-				for ($i = 0; $i < $this->length; $i++) {
-					$this->keystring .= $this->_allowedSymbols{random_int(0, strlen($this->_allowedSymbols) - 1)};
-				}
-				if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
-					break;
-				}
-			}
-		
+			$this->_generateKeyString();
+
 			$fontFile = $fonts[random_int(0, count($fonts) - 1)];
 			$font = imagecreatefrompng($fontFile);
 			imagealphablending($font, true);
 
 			$fontFileWidth = imagesx($font);
 			$fontFileHeight = imagesy($font)-1;
-			
+
 			$fontMetrics = [];
 			$symbol = 0;
 			$readingSymbol = false;
@@ -242,15 +233,7 @@ class KCaptcha
 			}
 		} while ($x >= $this->width - 10); // while not fit in canvas
 
-		//Noise
-		$white = imagecolorallocate($font, 255, 255, 255);
-		$black = imagecolorallocate($font, 0, 0, 0);
-		for ($i = 0; $i < (($this->height - 30) * $x) * $this->whiteNoiseDensity; $i++) {
-			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $white);
-		}
-		for ($i = 0; $i < (($this->height - 30) * $x) * $this->blackNoiseDensity; $i++) {
-			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $black);
-		}
+		$this->_noise($font, $img, $x);
 
 		//Credits. To remove, see configuration file
 		$img2 = imagecreatetruecolor($this->width, $this->height + ($this->showCredits ? 12 : 0));
@@ -277,6 +260,42 @@ class KCaptcha
 
 		$this->_waveDistortion($rand, $x / 2, $img, $img2);
 		$this->_setHeader($img2);
+	}
+
+	/**
+	 * Generating random key string
+	 * @throws \Exception
+	 */
+	private function _generateKeyString()
+	{
+		while (true) {
+			$this->keystring = '';
+			for ($i = 0; $i < $this->length; $i++) {
+				$this->keystring .= $this->_allowedSymbols{random_int(0, strlen($this->_allowedSymbols) - 1)};
+			}
+			if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Noise
+	 * @param resource $font
+	 * @param resource $img
+	 * @param int $x
+	 * @throws \Exception
+	 */
+	private function _noise($font, $img, $x)
+	{
+		$white = imagecolorallocate($font, 255, 255, 255);
+		$black = imagecolorallocate($font, 0, 0, 0);
+		for ($i = 0; $i < (($this->height - 30) * $x) * $this->whiteNoiseDensity; $i++) {
+			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $white);
+		}
+		for ($i = 0; $i < (($this->height - 30) * $x) * $this->blackNoiseDensity; $i++) {
+			imagesetpixel($img, random_int(0, $x - 1), random_int(10, $this->height - 15), $black);
+		}
 	}
 
 	/**
