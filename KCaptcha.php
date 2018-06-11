@@ -102,18 +102,21 @@ class KCaptcha
 	 */
 	public $jpegQuality;
 
+	/**
+	 * KCaptcha constructor.
+	 */
 	public function __construct() {
-		$this->length = mt_rand(5,7);
+		$this->length = mt_rand(5, 7);
 		$this->width = 160;
 		$this->height = 80;
 		$this->fluctuationAmplitude = 8;
-		$this->whiteNoiseDensity = 1/6;
-		$this->blackNoiseDensity = 1/30;
+		$this->whiteNoiseDensity = 1 / 6;
+		$this->blackNoiseDensity = 1 / 30;
 		$this->noSpaces = true;
 		$this->showCredits = false;
 		$this->credits = '';
-		$this->foregroundColor = array(mt_rand(0,80), mt_rand(0,80), mt_rand(0,80));
-		$this->backgroundColor = array(mt_rand(220,255), mt_rand(220,255), mt_rand(220,255));
+		$this->foregroundColor = array(mt_rand(0, 80), mt_rand(0, 80), mt_rand(0, 80));
+		$this->backgroundColor = array(mt_rand(220, 255), mt_rand(220, 255), mt_rand(220, 255));
 		$this->jpegQuality = 90;
 	}
 
@@ -123,23 +126,23 @@ class KCaptcha
 	 */
 	public function KCAPTCHA() {
 		$fonts = array();
-		$fontsdir_absolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
-		if ($handle = opendir($fontsdir_absolute)) {
+		$fontsdirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
+		if ($handle = opendir($fontsdirAbsolute)) {
 			while (false !== ($file = readdir($handle))) {
 				if (preg_match('/\.png$/i', $file)) {
-					$fonts[] = $fontsdir_absolute.'/'.$file;
+					$fonts[] = $fontsdirAbsolute.'/'.$file;
 				}
 			}
 			closedir($handle);
 		}
 	
-		$alphabet_length = strlen($this->_alphabet);
+		$alphabetLength = strlen($this->_alphabet);
 		
 		do {
 			// generating random keystring
 			while (true) {
 				$this->keystring = '';
-				for ($i = 0; $i < $length; $i++) {
+				for ($i = 0; $i < $this->length; $i++) {
 					$this->keystring .= $this->_allowedSymbols{mt_rand(0, strlen($this->_allowedSymbols) - 1)};
 				}
 				if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
@@ -147,41 +150,41 @@ class KCaptcha
 				}
 			}
 		
-			$font_file = $fonts[mt_rand(0, count($fonts) - 1)];
-			$font = imagecreatefrompng($font_file);
+			$fontFile = $fonts[mt_rand(0, count($fonts) - 1)];
+			$font = imagecreatefrompng($fontFile);
 			imagealphablending($font, true);
 
-			$fontfile_width = imagesx($font);
-			$fontfile_height = imagesy($font)-1;
+			$fontfileWidth = imagesx($font);
+			$fontfileHeight = imagesy($font)-1;
 			
-			$font_metrics = array();
+			$fontMetrics = array();
 			$symbol = 0;
-			$reading_symbol = false;
+			$readingSymbol = false;
 
 			// loading font
-			for ($i = 0; $i < $fontfile_width && $symbol < $alphabet_length; $i++) {
+			for ($i = 0; $i < $fontfileWidth && $symbol < $alphabetLength; $i++) {
 				$transparent = (imagecolorat($font, $i, 0) >> 24) == 127;
 
-				if (!$reading_symbol && !$transparent) {
-					$font_metrics[$this->_alphabet{$symbol}] = array('start' => $i);
-					$reading_symbol = true;
+				if (!$readingSymbol && !$transparent) {
+					$fontMetrics[$this->_alphabet{$symbol}] = array('start' => $i);
+					$readingSymbol = true;
 					continue;
 				}
 
-				if ($reading_symbol && $transparent) {
-					$font_metrics[$this->_alphabet{$symbol}]['end'] = $i;
-					$reading_symbol = false;
+				if ($readingSymbol && $transparent) {
+					$fontMetrics[$this->_alphabet{$symbol}]['end'] = $i;
+					$readingSymbol = false;
 					$symbol++;
 					continue;
 				}
 			}
 
-			$img = imagecreatetruecolor($width, $height);
+			$img = imagecreatetruecolor($this->width, $this->height);
 			imagealphablending($img, true);
 			$white = imagecolorallocate($img, 255, 255, 255);
 			$black = imagecolorallocate($img, 0, 0, 0);
 
-			imagefilledrectangle($img, 0, 0, $width - 1, $height - 1, $white);
+			imagefilledrectangle($img, 0, 0, $this->width - 1, $this->height - 1, $white);
 
 			// draw text
 			$x = 1;
@@ -189,28 +192,28 @@ class KCaptcha
 			if ($odd == 0) {
 				$odd =- 1;
 			}
-			for ($i = 0; $i < $length; $i++) {
-				$m = $font_metrics[$this->keystring{$i}];
+			for ($i = 0; $i < $this->length; $i++) {
+				$m = $fontMetrics[$this->keystring{$i}];
 
-				$y = (($i % 2) * $fluctuation_amplitude - $fluctuation_amplitude/2) * $odd
-					+ mt_rand(-round($fluctuation_amplitude / 3), round($fluctuation_amplitude / 3))
-					+ ($height - $fontfile_height) / 2;
+				$y = (($i % 2) * $this->fluctuationAmplitude - $this->fluctuationAmplitude / 2) * $odd
+					+ mt_rand(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
+					+ ($this->height - $fontfileHeight) / 2;
 
-				if ($no_spaces) {
+				if ($this->noSpaces) {
 					$shift = 0;
 					if ($i > 0) {
 						$shift = 10000;
-						for ($sy = 3; $sy < $fontfile_height-10; $sy += 1) {
+						for ($sy = 3; $sy < $fontfileHeight-10; $sy += 1) {
 							for ($sx = $m['start'] - 1; $sx < $m['end']; $sx += 1) {
 								$rgb = imagecolorat($font, $sx, $sy);
 								$opacity = $rgb>>24;
 								if ($opacity < 127) {
 									$left = $sx - $m['start'] + $x;
 									$py = $sy + $y;
-									if ($py > $height) {
+									if ($py > $this->height) {
 										break;
 									}
-									for ($px = min($left, $width-1); $px > $left - 200 && $px >= 0; $px -= 1) {
+									for ($px = min($left, $this->width-1); $px > $left - 200 && $px >= 0; $px -= 1) {
 										$color = imagecolorat($img, $px, $py) & 0xff;
 										if ($color + $opacity < 170) { // 170 - threshold
 											if ($shift > $left - $px) {
@@ -230,31 +233,31 @@ class KCaptcha
 				} else {
 					$shift = 1;
 				}
-				imagecopy($img, $font, $x - $shift, $y, $m['start'], 1, $m['end'] - $m['start'], $fontfile_height);
+				imagecopy($img, $font, $x - $shift, $y, $m['start'], 1, $m['end'] - $m['start'], $fontfileHeight);
 				$x += $m['end'] - $m['start'] - $shift;
 			}
-		} while ($x >= $width - 10); // while not fit in canvas
+		} while ($x >= $this->width - 10); // while not fit in canvas
 
 		//noise
 		$white = imagecolorallocate($font, 255, 255, 255);
 		$black = imagecolorallocate($font, 0, 0, 0);
-		for ($i = 0; $i < (($height - 30) * $x) * $white_noise_density; $i++) {
-			imagesetpixel($img, mt_rand(0, $x - 1), mt_rand(10, $height - 15), $white);
+		for ($i = 0; $i < (($this->height - 30) * $x) * $this->whiteNoiseDensity; $i++) {
+			imagesetpixel($img, mt_rand(0, $x - 1), mt_rand(10, $this->height - 15), $white);
 		}
-		for ($i = 0; $i < (($height - 30) * $x) * $black_noise_density; $i++) {
-			imagesetpixel($img, mt_rand(0, $x - 1), mt_rand(10, $height - 15), $black);
+		for ($i = 0; $i < (($this->height - 30) * $x) * $this->blackNoiseDensity; $i++) {
+			imagesetpixel($img, mt_rand(0, $x - 1), mt_rand(10, $this->height - 15), $black);
 		}
 
 		$center = $x / 2;
 
 		// credits. To remove, see configuration file
-		$img2 = imagecreatetruecolor($width, $height + ($show_credits ? 12 : 0));
-		$foreground = imagecolorallocate($img2, $foreground_color[0], $foreground_color[1], $foreground_color[2]);
-		$background = imagecolorallocate($img2, $background_color[0], $background_color[1], $background_color[2]);
-		imagefilledrectangle($img2, 0, 0, $width - 1, $height - 1, $background);
-		imagefilledrectangle($img2, 0, $height, $width - 1, $height + 12, $foreground);
-		$credits = empty($credits) ? $_SERVER['HTTP_HOST'] : $credits;
-		imagestring($img2, 2, $width / 2 - imagefontwidth(2) * strlen($credits) / 2, $height - 2, $credits, $background);
+		$img2 = imagecreatetruecolor($this->width, $this->height + ($this->showCredits ? 12 : 0));
+		$foreground = imagecolorallocate($img2, $this->foregroundColor[0], $this->foregroundColor[1], $this->foregroundColor[2]);
+		$background = imagecolorallocate($img2, $this->backgroundColor[0], $this->backgroundColor[1], $this->backgroundColor[2]);
+		imagefilledrectangle($img2, 0, 0, $this->width - 1, $this->height - 1, $background);
+		imagefilledrectangle($img2, 0, $this->height, $this->width - 1, $this->height + 12, $foreground);
+		$credits = empty($this->credits) ? $_SERVER['HTTP_HOST'] : $this->credits;
+		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * strlen($credits) / 2, $this->height - 2, $credits, $background);
 
 		// periods
 		$rand1 = mt_rand(750000, 1200000) / 10000000;
@@ -271,12 +274,12 @@ class KCaptcha
 		$rand10 = mt_rand(330, 450) / 100;
 
 		//wave distortion
-		for ($x = 0; $x < $width; $x++) {
-			for ($y = 0; $y < $height; $y++) {
-				$sx = $x + (sin($x*$rand1 + $rand5) + sin($y * $rand3 + $rand6)) * $rand9 - $width / 2 + $center + 1;
-				$sy = $y + (sin($x*$rand2 + $rand7) + sin($y * $rand4 + $rand8)) * $rand10;
+		for ($x = 0; $x < $this->width; $x++) {
+			for ($y = 0; $y < $this->height; $y++) {
+				$sx = $x + (sin($x * $rand1 + $rand5) + sin($y * $rand3 + $rand6)) * $rand9 - $this->width / 2 + $center + 1;
+				$sy = $y + (sin($x * $rand2 + $rand7) + sin($y * $rand4 + $rand8)) * $rand10;
 
-				if ($sx < 0 || $sy < 0 || $sx >= $width - 1 || $sy >= $height - 1) {
+				if ($sx < 0 || $sy < 0 || $sx >= $this->width - 1 || $sy >= $this->height - 1) {
 					continue;
 				} else {
 					$color = imagecolorat($img, $sx, $sy) & 0xFF;
@@ -288,9 +291,9 @@ class KCaptcha
 				if ($color == 255 && $color_x == 255 && $color_y == 255 && $color_xy == 255) {
 					continue;
 				} else if ($color == 0 && $color_x == 0 && $color_y == 0 && $color_xy == 0) {
-					$newred = $foreground_color[0];
-					$newgreen = $foreground_color[1];
-					$newblue = $foreground_color[2];
+					$newred = $this->foregroundColor[0];
+					$newgreen = $this->foregroundColor[1];
+					$newblue = $this->foregroundColor[2];
 				} else {
 					$frsx = $sx - floor($sx);
 					$frsy = $sy - floor($sy);
@@ -309,9 +312,9 @@ class KCaptcha
 					$newcolor = $newcolor / 255;
 					$newcolor0 = 1 - $newcolor;
 
-					$newred = $newcolor0 * $foreground_color[0] + $newcolor * $background_color[0];
-					$newgreen = $newcolor0 * $foreground_color[1] + $newcolor * $background_color[1];
-					$newblue = $newcolor0 * $foreground_color[2] + $newcolor * $background_color[2];
+					$newred = $newcolor0 * $this->foregroundColor[0] + $newcolor * $this->backgroundColor[0];
+					$newgreen = $newcolor0 * $this->foregroundColor[1] + $newcolor * $this->backgroundColor[1];
+					$newblue = $newcolor0 * $this->foregroundColor[2] + $newcolor * $this->backgroundColor[2];
 				}
 
 				imagesetpixel($img2, $x, $y, imagecolorallocate($img2, $newred, $newgreen, $newblue));
@@ -324,7 +327,7 @@ class KCaptcha
 		header('Pragma: no-cache');
 		if (function_exists('imagejpeg')) {
 			header('Content-Type: image/jpeg');
-			imagejpeg($img2, null, $jpeg_quality);
+			imagejpeg($img2, null, $this->jpegQuality);
 		} else if(function_exists('imagegif')) {
 			header('Content-Type: image/gif');
 			imagegif($img2);
