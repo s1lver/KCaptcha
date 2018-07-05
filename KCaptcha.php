@@ -115,16 +115,7 @@ class KCaptcha
 	 */
 	private function _init(): void
 	{
-		$fonts = [];
-		$fontsDirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
-		if ($handle = opendir($fontsDirAbsolute)) {
-			while (false !== ($file = readdir($handle))) {
-				if (preg_match('/\.png$/i', $file)) {
-					$fonts[] = $fontsDirAbsolute.'/'.$file;
-				}
-			}
-			closedir($handle);
-		}
+		$fonts = $this->_preloadFonts();
 
 		do {
 			$this->_generateKeyString();
@@ -194,6 +185,25 @@ class KCaptcha
 
 		$this->_waveDistortion($this->_rand(), $x / 2, $img, $img2);
 		$this->_setHeader($img2);
+	}
+
+	/**
+	 * @return array
+	 */
+	private function _preloadFonts(): array
+	{
+		$fonts = [];
+		$fontsDirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
+		if ($handle = opendir($fontsDirAbsolute)) {
+			while (false !== ($file = readdir($handle))) {
+				if (preg_match('/\.png$/i', $file)) {
+					$fonts[] = $fontsDirAbsolute.'/'.$file;
+				}
+			}
+			closedir($handle);
+		}
+
+		return $fonts;
 	}
 
 	/**
