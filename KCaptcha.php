@@ -80,7 +80,7 @@ class KCaptcha
 	/**
 	 * Show credits
 	 * set to false to remove credits line. Credits adds 12 pixels to image height
-	 * @var bool1
+	 * @var bool
 	 */
 	public $showCredits;
 
@@ -127,7 +127,7 @@ class KCaptcha
 	/**
 	 * Generates key string and image
 	 */
-	private function _init()
+	private function _init(): void
 	{
 		$fonts = [];
 		$fontsDirAbsolute = __DIR__.DIRECTORY_SEPARATOR.$this->_fontsDir;
@@ -259,7 +259,7 @@ class KCaptcha
 	 * Generating random key string
 	 * @throws \Exception
 	 */
-	private function _generateKeyString()
+	private function _generateKeyString(): void
 	{
 		while (true) {
 			$this->keystring = '';
@@ -279,7 +279,7 @@ class KCaptcha
 	 * @param int $x
 	 * @throws \Exception
 	 */
-	private function _noise($font, $img, $x)
+	private function _noise($font, $img, $x): void
 	{
 		$white = imagecolorallocate($font, 255, 255, 255);
 		$black = imagecolorallocate($font, 0, 0, 0);
@@ -298,7 +298,7 @@ class KCaptcha
 	 * @param $img
 	 * @param $img2
 	 */
-	private function _waveDistortion($rand, $center, $img, $img2)
+	private function _waveDistortion($rand, $center, $img, $img2): void
 	{
 		for ($x = 0; $x < $this->width; $x++) {
 			for ($y = 0; $y < $this->height; $y++) {
@@ -349,7 +349,7 @@ class KCaptcha
 	/**
 	 * @param $img
 	 */
-	private function _setHeader($img)
+	private function _setHeader($img): void
 	{
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -371,7 +371,7 @@ class KCaptcha
 	 * Returns key string
 	 * @return string
 	 */
-	public function getKeyString()
+	public function getKeyString(): string
 	{
 		return $this->keystring;
 	}
@@ -380,7 +380,7 @@ class KCaptcha
 	 * Preparing PNG fonts to use with KCAPTCHA.
 	 * Reads files from folder "../fonts0", scans for symbols ans spaces and writes new font file with cached symbols positions to folder "../fonts"
 	 */
-	public function fontPrepare()
+	public function fontPrepare(): void
 	{
 		if ($handle = opendir('../fonts0')) {
 			while (false !== ($file = readdir($handle))) {
