@@ -146,14 +146,14 @@ class KCaptcha
 						$shift = 10000;
 						for ($sy = 3; $sy < $fontFileHeight - 10; ++$sy) {
 							for ($sx = $m['start'] - 1; $sx < $m['end']; ++$sx) {
-								$opacity = imagecolorat($font, $sx, $sy)>>24;
+								$opacity = imagecolorat($font, $sx, $sy) >> 24;
 								if ($opacity < 127) {
 									$left = $sx - $m['start'] + $x;
 									$py = $sy + $y;
 									if ($py > $this->height) {
 										break;
 									}
-									for ($px = min($left, $this->width-1); $px > $left - 200 && $px >= 0; --$px) {
+									for ($px = min($left, $this->width - 1); $px > $left - 200 && $px >= 0; --$px) {
 										if (imagecolorat($img, $px, $py) & 0xff + $opacity < 170) { //170 - threshold
 											if ($shift > $left - $px) {
 												$shift = $left - $px;
@@ -214,12 +214,10 @@ class KCaptcha
 	private function _loadFonts($font): array
 	{
 		$fontMetrics = [];
-		$fontFileWidth = imagesx($font);
-		$alphabetLength = \strlen($this->_alphabet);
 		$symbol = 0;
 		$readingSymbol = false;
 
-		for ($i = 0; $i < $fontFileWidth && $symbol < $alphabetLength; $i++) {
+		for ($i = 0; $i < imagesx($font) && $symbol < \strlen($this->_alphabet); $i++) {
 			$transparent = (imagecolorat($font, $i, 0) >> 24) === 127;
 
 			if (!$readingSymbol && !$transparent) {
@@ -331,11 +329,7 @@ class KCaptcha
 					$frSX1 = 1 - $frSX;
 					$frSY1 = 1 - $frSY;
 
-					$newColor = (
-						$color * $frSX1 * $frSY1 +
-						$colorX * $frSX * $frSY1 +
-						$colorY * $frSX1 * $frSY +
-						$colorXY * $frSX * $frSY);
+					$newColor = ($color * $frSX1 * $frSY1 + $colorX * $frSX * $frSY1 + $colorY * $frSX1 * $frSY + $colorXY * $frSX * $frSY);
 
 					if ($newColor > 255) {
 						$newColor = 255;
