@@ -10,7 +10,6 @@
  * System requirements: PHP 4.0.6+ w/ GD
  * KCAPTCHA is a free software. You can freely use it for developing own site or software.
  * If you use this software as a part of own software, you must leave copyright notices intact or add KCAPTCHA copyright notices to own.
- * As a default configuration, KCAPTCHA has a small credits text at bottom of CAPTCHA image.
  */
 
 namespace k_captcha;
@@ -78,19 +77,6 @@ class KCaptcha
 	public $noSpaces;
 
 	/**
-	 * Show credits
-	 * set to false to remove credits line. Credits adds 12 pixels to image height
-	 * @var bool
-	 */
-	public $showCredits;
-
-	/**
-	 * If empty, HTTP_HOST will be shown
-	 * @var string
-	 */
-	public $credits;
-
-	/**
 	 * CAPTCHA image colors (RGB, 0-255)
 	 * @var array
 	 */
@@ -116,8 +102,6 @@ class KCaptcha
 		$this->whiteNoiseDensity = 1 / 6;
 		$this->blackNoiseDensity = 1 / 30;
 		$this->noSpaces = true;
-		$this->showCredits = false;
-		$this->credits = '';
 		$this->foregroundColor = [random_int(0, 80), random_int(0, 80), random_int(0, 80)];
 		$this->backgroundColor = [random_int(220, 255), random_int(220, 255), random_int(220, 255)];
 		$this->jpegQuality = 90;
@@ -202,14 +186,11 @@ class KCaptcha
 
 		$this->_noise($font, $img, $x);
 
-		//Credits. To remove, see configuration file
-		$img2 = imagecreatetruecolor($this->width, $this->height + ($this->showCredits ? 12 : 0));
+		$img2 = imagecreatetruecolor($this->width, $this->height);
 		$foreground = imagecolorallocate($img2, $this->foregroundColor[0], $this->foregroundColor[1], $this->foregroundColor[2]);
 		$background = imagecolorallocate($img2, $this->backgroundColor[0], $this->backgroundColor[1], $this->backgroundColor[2]);
 		imagefilledrectangle($img2, 0, 0, $this->width - 1, $this->height - 1, $background);
 		imagefilledrectangle($img2, 0, $this->height, $this->width - 1, $this->height + 12, $foreground);
-		$credits = empty($this->credits) ? $_SERVER['HTTP_HOST'] : $this->credits;
-		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * \strlen($credits) / 2, $this->height - 2, $credits, $background);
 
 		$this->_waveDistortion($this->_rand(), $x / 2, $img, $img2);
 		$this->_setHeader($img2);
