@@ -105,6 +105,7 @@ class KCaptcha
 
 	/**
 	 * KCaptcha constructor.
+	 * @throws \Exception
 	 */
 	public function __construct()
 	{
@@ -126,6 +127,7 @@ class KCaptcha
 
 	/**
 	 * Generates key string and image
+	 * @throws \Exception
 	 */
 	private function _init(): void
 	{
