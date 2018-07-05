@@ -142,12 +142,12 @@ class KCaptcha
 			closedir($handle);
 		}
 	
-		$alphabetLength = strlen($this->_alphabet);
+		$alphabetLength = \strlen($this->_alphabet);
 
 		do {
 			$this->_generateKeyString();
 
-			$font = imagecreatefrompng($fonts[random_int(0, count($fonts) - 1)]);
+			$font = imagecreatefrompng($fonts[random_int(0, \count($fonts) - 1)]);
 			imagealphablending($font, true);
 
 			$fontFileWidth = imagesx($font);
@@ -237,7 +237,7 @@ class KCaptcha
 		imagefilledrectangle($img2, 0, 0, $this->width - 1, $this->height - 1, $background);
 		imagefilledrectangle($img2, 0, $this->height, $this->width - 1, $this->height + 12, $foreground);
 		$credits = empty($this->credits) ? $_SERVER['HTTP_HOST'] : $this->credits;
-		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * strlen($credits) / 2, $this->height - 2, $credits, $background);
+		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * \strlen($credits) / 2, $this->height - 2, $credits, $background);
 
 		//Periods
 		$rand[] = random_int(750000, 1200000) / 10000000;
@@ -266,7 +266,7 @@ class KCaptcha
 		while (true) {
 			$this->keystring = '';
 			for ($i = 0; $i < $this->length; $i++) {
-				$this->keystring .= $this->_allowedSymbols{random_int(0, strlen($this->_allowedSymbols) - 1)};
+				$this->keystring .= $this->_allowedSymbols{random_int(0, \strlen($this->_allowedSymbols) - 1)};
 			}
 			if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
 				break;
@@ -357,13 +357,13 @@ class KCaptcha
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', false);
 		header('Pragma: no-cache');
-		if (function_exists('imagejpeg')) {
+		if (\function_exists('imagejpeg')) {
 			header('Content-Type: image/jpeg');
 			imagejpeg($img, null, $this->jpegQuality);
-		} else if(function_exists('imagegif')) {
+		} else if(\function_exists('imagegif')) {
 			header('Content-Type: image/gif');
 			imagegif($img);
-		} else if(function_exists('imagepng')) {
+		} else if(\function_exists('imagepng')) {
 			header('Content-Type: image/x-png');
 			imagepng($img);
 		}
