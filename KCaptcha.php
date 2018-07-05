@@ -141,44 +141,16 @@ class KCaptcha
 			}
 			closedir($handle);
 		}
-	
-		$alphabetLength = \strlen($this->_alphabet);
 
 		do {
 			$this->_generateKeyString();
-
 			$font = imagecreatefrompng($fonts[random_int(0, \count($fonts) - 1)]);
 			imagealphablending($font, true);
-
-			$fontFileWidth = imagesx($font);
 			$fontFileHeight = imagesy($font) - 1;
-			$fontMetrics = [];
-
-			$symbol = 0;
-			$readingSymbol = false;
-
-			//Loading font
-			for ($i = 0; $i < $fontFileWidth && $symbol < $alphabetLength; $i++) {
-				$transparent = (imagecolorat($font, $i, 0) >> 24) === 127;
-
-				if (!$readingSymbol && !$transparent) {
-					$fontMetrics[$this->_alphabet{$symbol}] = ['start' => $i];
-					$readingSymbol = true;
-					continue;
-				}
-
-				if ($readingSymbol && $transparent) {
-					$fontMetrics[$this->_alphabet{$symbol}]['end'] = $i;
-					$readingSymbol = false;
-					$symbol++;
-					continue;
-				}
-			}
 
 			$img = imagecreatetruecolor($this->width, $this->height);
 			imagealphablending($img, true);
-			$white = imagecolorallocate($img, 255, 255, 255);
-			imagefilledrectangle($img, 0, 0, $this->width - 1, $this->height - 1, $white);
+			imagefilledrectangle($img, 0, 0, $this->width - 1, $this->height - 1, imagecolorallocate($img, 255, 255, 255));
 
 			//Draw text
 			$x = 1;
@@ -187,7 +159,7 @@ class KCaptcha
 				--$odd;
 			}
 			for ($i = 0; $i < $this->length; $i++) {
-				$m = $fontMetrics[$this->keystring{$i}];
+				$m = $this->_loadFonts($font)[$this->keystring{$i}];
 				$y = (($i % 2) * $this->fluctuationAmplitude - $this->fluctuationAmplitude / 2) * $odd
 					+ random_int(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
 					+ ($this->height - $fontFileHeight) / 2;
@@ -239,6 +211,49 @@ class KCaptcha
 		$credits = empty($this->credits) ? $_SERVER['HTTP_HOST'] : $this->credits;
 		imagestring($img2, 2, $this->width / 2 - imagefontwidth(2) * \strlen($credits) / 2, $this->height - 2, $credits, $background);
 
+		$this->_waveDistortion($this->_rand(), $x / 2, $img, $img2);
+		$this->_setHeader($img2);
+	}
+
+	/**
+	 * Loading font
+	 * @param $font
+	 * @return array
+	 */
+	private function _loadFonts($font): array
+	{
+		$fontMetrics = [];
+		$fontFileWidth = imagesx($font);
+		$alphabetLength = \strlen($this->_alphabet);
+		$symbol = 0;
+		$readingSymbol = false;
+
+		for ($i = 0; $i < $fontFileWidth && $symbol < $alphabetLength; $i++) {
+			$transparent = (imagecolorat($font, $i, 0) >> 24) === 127;
+
+			if (!$readingSymbol && !$transparent) {
+				$fontMetrics[$this->_alphabet{$symbol}] = ['start' => $i];
+				$readingSymbol = true;
+				continue;
+			}
+
+			if ($readingSymbol && $transparent) {
+				$fontMetrics[$this->_alphabet{$symbol}]['end'] = $i;
+				$readingSymbol = false;
+				$symbol++;
+				continue;
+			}
+		}
+
+		return $fontMetrics;
+	}
+
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function _rand(): array
+	{
 		//Periods
 		$rand[] = random_int(750000, 1200000) / 10000000;
 		$rand[] = random_int(750000, 1200000) / 10000000;
@@ -253,8 +268,7 @@ class KCaptcha
 		$rand[] = random_int(330, 420) / 110;
 		$rand[] = random_int(330, 450) / 100;
 
-		$this->_waveDistortion($rand, $x / 2, $img, $img2);
-		$this->_setHeader($img2);
+		return $rand;
 	}
 
 	/**
@@ -393,24 +407,21 @@ class KCaptcha
 				$img = imagecreatefrompng('../fonts0/'.$file);
 				imagealphablending($img, false);
 				imagesavealpha($img, true);
-				$black = imagecolorallocate($img, 0, 0, 0);
-				$gray = imagecolorallocate($img, 100, 100, 100);
 
 				$imgWidth = imagesx($img);
 				for ($x = 0; $x < $imgWidth; $x++) {
 					$space = true;
-					$column_opacity = 0;
+					$columnOpacity = 0;
 					$imgHeight = imagesy($img);
 					for ($y = 1; $y < $imgHeight; $y++) {
-						$rgb = imagecolorat($img, $x, $y);
-						$opacity = $rgb>>24;
+						$opacity = imagecolorat($img, $x, $y) >> 24;
 						if ($opacity !== 127) {
 							$space = false;
 						}
-						$column_opacity += 127 - $opacity;
+						$columnOpacity += 127 - $opacity;
 					}
 					if (!$space) {
-						imageline($img, $x, 0, $x, 0, $column_opacity < 200 ? $gray : $black);
+						imageline($img, $x, 0, $x, 0, $columnOpacity < 200 ? imagecolorallocate($img, 100, 100, 100) : imagecolorallocate($img, 0, 0, 0));
 					}
 				}
 				imagepng($img, '../fonts/'.$file);
