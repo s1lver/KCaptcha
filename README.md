@@ -16,3 +16,4 @@ KCAPTCHA PROJECT VERSION 2.0
 ### System requirements
 
 - PHP >= 7.2.0
+- GD
