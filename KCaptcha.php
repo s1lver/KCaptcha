@@ -17,7 +17,7 @@ namespace k_captcha;
  * Class KCaptcha
  * @package k_captcha
  *
- * @property string $keystring
+ * @property string $keyString
  */
 class KCaptcha
 {
@@ -133,7 +133,7 @@ class KCaptcha
 				--$odd;
 			}
 			for ($i = 0; $i < $this->length; $i++) {
-				$m = $this->_loadFonts($font)[$this->keystring{$i}];
+				$m = $this->_loadFonts($font)[$this->keyString{$i}];
 				$y = (($i % 2) * $this->fluctuationAmplitude - $this->fluctuationAmplitude / 2) * $odd
 					+ random_int(-round($this->fluctuationAmplitude / 3), round($this->fluctuationAmplitude / 3))
 					+ ($this->height - $fontFileHeight) / 2;
@@ -266,11 +266,11 @@ class KCaptcha
 	private function _generateKeyString(): void
 	{
 		while (true) {
-			$this->keystring = '';
+			$this->keyString = '';
 			for ($i = 0; $i < $this->length; $i++) {
-				$this->keystring .= $this->_allowedSymbols{random_int(0, \strlen($this->_allowedSymbols) - 1)};
+				$this->keyString .= $this->_allowedSymbols{random_int(0, \strlen($this->_allowedSymbols) - 1)};
 			}
-			if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keystring)) {
+			if (!preg_match('/cp|cb|ck|c6|c9|rn|rm|mm|co|do|cl|db|qp|qb|dp|ww/', $this->keyString)) {
 				break;
 			}
 		}
@@ -373,7 +373,7 @@ class KCaptcha
 	 */
 	public function getKeyString(): string
 	{
-		return $this->keystring;
+		return $this->keyString;
 	}
 
 	/**
